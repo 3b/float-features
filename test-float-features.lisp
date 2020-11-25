@@ -117,10 +117,21 @@
 (parachute:define-test short-float-round-trip
   :compile-at :compile-time
   (parachute:true
-   (float-features:with-float-traps-masked t
-     (loop for i from 0 below 65536
-           always (= i (float-features:short-float-bits
-                        (float-features:bits-short-float i)))))))
+   (let ((r (float-features:with-float-traps-masked t
+              (loop for i from 0 below 65536
+                    always (= i (float-features:short-float-bits
+                                 (float-features:bits-short-float i)))))))
+     (unless r
+       (float-features:with-float-traps-masked t
+         (loop for i from 0 below 65536
+               unless (= i (float-features:short-float-bits
+                            (float-features:bits-short-float i)))
+                 do (format t "~s: ~s ~s~%"
+                            i
+                            (float-features:bits-short-float i)
+                            (float-features:short-float-bits
+                             (float-features:bits-short-float i))))))
+     r)))
 
 (defun short-bits-double (i)
   (cond
