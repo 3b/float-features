@@ -131,10 +131,9 @@
                             (float-features:bits-short-float i)
                             (float-features:short-float-bits
                              (float-features:bits-short-float i))
-                            #+ccl
-                            (ccl::single-float-bits
-                             (float-features:bits-short-float i))
-                            nil)))
+                            #+ccl (ccl::single-float-bits
+                                   (float-features:bits-short-float i))
+                            #-ccl nil))))
      r)))
 
 (defun short-bits-double (i)
